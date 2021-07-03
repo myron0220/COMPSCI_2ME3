@@ -1,0 +1,302 @@
+\documentclass[12pt]{article}
+
+\usepackage{graphicx}
+\usepackage{paralist}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\oddsidemargin 0mm
+\evensidemargin 0mm
+\textwidth 160mm
+\textheight 200mm
+
+\pagestyle {plain}
+\pagenumbering{arabic}
+
+\newcounter{stepnum}
+
+\title{Assignment 1 Solution}
+\author{Name: Mingzhe Wang MacID: wangm235}
+\date{\today}
+
+\begin {document}
+
+\maketitle
+
+This report discusses testing of the \verb|ComplexT| and \verb|TriangleT|
+classes written for Assignment 1. It also discusses testing of the partner's
+version of the two classes. The design restrictions for the assignment
+are critiqued and then various related discussion questions are answered.
+
+\section*{Note for modification of codes}
+To improve the performance of my code and test, it should be noticed that there are several modifications after the Part 1 deadline. Specifically, they are:
+\subsection*{Changes for test\_driver.py}
+\begin{itemize}
+\item Add three test cases, named \verb|test_complex_con|, \verb|test_triangle_con_normal|, and \verb|test_triangle_con_except| to test the constructors for \verb|ComplexT| and \verb|TriangleT|, respectively.
+\item For each \verb|get_phi|, \verb|sqrt|, \verb|equal|, and \verb|tri_type|, separate the original single test case to multiple ones to better represent the rationale that test cases should cover all branches/exceptions. This modification is also helpful for determining exactly which branch is wrong.
+\item Add more test cases for testing the branch of \verb|tri_type| that returns \verb|TriType.right|, because the single original test case is found not enough to cover all conditions.
+\end{itemize}
+\subsection*{Changes for complex\_adt.py}
+\begin{itemize}
+\item Add \verb|@throws ZeroDivisionError| to the document comments of \verb|get_phi|, \verb|recip|, and \verb|div|, because of the fact that they all have flexible variables as the denominators in certain calculation, which can induce \verb|ZeroDivisionError|.
+\end{itemize}
+\section{Assumptions and Exceptions} \label{AssumptAndExcept}
+\subsection{Assumptions of complex\_adt.py}
+\begin{itemize}
+\item The argument type of the constructor of \verb|ComplexT| must be float, there is no auto float converting.
+\item As is the Python's philosophy, no type check performed for the constructor of \verb|ComplexT|.
+\item The method \verb|add|, \verb|div|, \verb|mult|, \verb|recip|, \verb|sqrt|, and \verb|sub| is a getter and will not imutate the current object.
+\item The argument of \verb|div| must be an non-zero complex number.
+\item The method \verb|div| is an "exact" equal, which compares two complex numbers' real and imaginary parts by bit-by-bit equal.
+\item For \verb|get_phi|, the real part and the imaginary part of the given complex number should not be both zero.
+\item For \verb|recip|, the current complex number must be non-zero.
+\item For \verb|sqrt|, the imaginary part of the current complex number should not be zero. The output is the positive square root.
+\end{itemize}
+\subsection{Exceptions of complex\_adt.py}
+\begin{itemize}
+\item For \verb|div|, a \verb|ZeroDivisionError| will be raised if the real and imaginary parts of the argument complex number are so small that raises float division by zero error.
+\item For \verb|get_phi| and \verb|recip|, a \verb|ZeroDivisionError| will be raised if the real and imaginary parts of the current complex number are so small that raises float division by zero error.
+\end{itemize}
+\subsection{Assumptions of triangle\_adt.py}
+\begin{itemize}
+\item For the constructor of \verb|TriangleT|, a  \verb|TriangleT| can be formed even if it is not valid (i.e.its three sides can not form a geometric triangle). However, a \verb|TriangleT| can be formed only if all its three sides are positive integers. As is the Python's philosophy, no type check performed.
+\item To use methods such as \verb|area|, \verb|perim|, and \verb|tri_type|,  the current triangle must be a valid triangle.
+\item For \verb|tri_type|, if a \verb|TriangleT| belongs to both equilat and isosceles, it will be equilat. Because equilat is a more special type; if a \verb|TriangleT| belongs to both scalene and right, it will be right. Because right is a more specical type.
+\end{itemize}
+\subsection{Exceptions of triangle\_adt.py}
+\begin{itemize}
+\item For the constructor of \verb|TriangleT|, a \verb|ValueError| will be raised if some inputs are negative.
+\end{itemize}
+\section{Test Cases and Rationale} \label{Testing}
+\subsection{Test Cases}
+There are totally 27 test cases performed, in each test cases there could be multiple assertions that can test the performance of the program to extremely small,  large numbers and special numbers. However, it should be noticed that each test case is designed to test one branch/exception of a given method. Through this, it is easy to determine which statement is not reliable in a single method.
+\subsection{Rationale}
+The selection of these test cases follows certain rationales, in particular, they are:
+\begin{itemize}
+\item The test cases should cover every branches of the tested method. For example, there should be at least four test cases for \verb|tri_type|, because there are four branches that will return \verb|TriType.right|, \verb|TriType.equilat|, \verb|TriType.isosceles|, and \verb|TriType.scalene| respectively in the definition of \verb|tri_type|.
+\item If a method or constructor could raise certain exceptions, then these exceptions could be treated as branches, which means the test cases should also cover them. However, in my implementation, instead of throwing exceptions, most of them are marked as invalid input in the assumptions. So the only example for testing exceptions will be the test for the constructor of \verb|TriangleT|.
+\item For float numbers comparison, normally we only need to perform 
+approximate equality under certain tolerated difference. In this test, they are set as following:
+\lstset{language=Python, basicstyle=\ttfamily\small, breaklines=true, showspaces=false,
+  showstringspaces=false, breakatwhitespace=true}
+\begin{lstlisting}
+def isClose(a, b, rel_tol = 1e-09, abs_tol = 0.0):
+    return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
+\end{lstlisting}
+\item Test cases that can be verified in another way easily should be chosen. For example, test cases like \verb|ComplexT(math.sqrt(2), -math.sqrt(2))| were chosen, because they can be calculated manually quickly, however they may not be that easy for computers to calculate.
+\item Test cases that use different mathematical types of numbers, such as negative numbers, rational numbers, irrational numbers, numbers expressed in scientific notation etc. should be chose. Because they can test the performance of program in different circumstances.
+\item Test cases that use extremely large or small numbers as input should be chosen. For example, test cases like \verb|ComplexT(1e10,1e10)| and \verb|ComplexT(-1e10,-1e10)| were chosen because they help test the reliability of the program in edge cases.
+\end{itemize}
+\section{Results of Testing Partner's Code}
+\subsection{Results of testing my code}
+\lstset{language=bash, basicstyle=\ttfamily\small, breaklines=true, showspaces=false,
+  showstringspaces=false, breakatwhitespace=true}
+\begin{lstlisting}
+python3  src/test_driver.py
+-------------------------Tests for complex_adt.py--------------------
+test_complex_con() test: PASSED.
+real() test: PASSED.
+imag() test: PASSED.
+get_r() test: PASSED.
+get_phi() not (real < 0 and imag = 0) test: PASSED.
+get_phi() (real < 0 and imag = 0) test: PASSED.
+equal() test: PASSED.
+conj() test: PASSED.
+add() test: PASSED.
+sub() test: PASSED.
+mult() test: PASSED.
+recip() test: PASSED.
+div() test: PASSED.
+sqrt() (imag > 0) test: PASSED.
+sqrt() (imag < 0) test: PASSED.
+-------------------------Tests for triangle_adt.py-------------------
+test_triangle_con() normal test: PASSED
+test_triangle_con() except test: PASSED
+get_sides() test: PASSED.
+equal() true test: PASSED.
+equal() false test: PASSED.
+perim() test: PASSED.
+area() test: PASSED.
+is_valid() test: PASSED.
+tri_type() right test: PASSED.
+tri_type() equilat test: PASSED.
+tri_type() isosceles test: PASSED.
+tri_type() scalene test: PASSED.
+------------------------------------Total----------------------------
+Passed test number:  27
+Total test number:  27
+\end{lstlisting}
+When running the tests on my code, there is no exception raised. My code passes all the 27 tests.
+\subsection{Results of testing partner's code: before modification}
+\begin{lstlisting}
+python3  partner/test_driver.py
+-------------------------Tests for complex_adt.py--------------------
+test_complex_con() test: PASSED.
+real() test: PASSED.
+imag() test: PASSED.
+get_r() test: PASSED.
+get_phi() not (real < 0 and imag = 0) test: PASSED.
+get_phi() (real < 0 and imag = 0) test: PASSED.
+equal() test: PASSED.
+conj() test: PASSED.
+add() test: PASSED.
+sub() test: PASSED.
+mult() test: PASSED.
+recip() test: PASSED.
+div() test: PASSED.
+sqrt() (imag > 0) test: PASSED.
+sqrt() (imag < 0) test: PASSED.
+-------------------------Tests for triangle_adt.py-------------------
+test_triangle_con() normal test: PASSED
+test_triangle_con() except test: FAILED
+get_sides() test: PASSED.
+equal() true test: PASSED.
+equal() false test: PASSED.
+perim() test: PASSED.
+area() test: PASSED.
+is_valid() test: PASSED.
+tri_type() right test: FAILED.
+tri_type() equilat test: PASSED.
+Traceback (most recent call last):
+  File "partner/test_driver.py", line 477, in <module>
+    test_tri_type_isosceles()
+  File "partner/test_driver.py", line 418, in test_tri_type_isosceles
+    assert t3.tri_type() == TriType.isosceles
+  File "/usr/lib/python3.6/enum.py", line 326, in __getattr__
+    raise AttributeError(name) from None
+AttributeError: isosceles
+Makefile:15: recipe for target 'test' failed
+make: *** [test] Error 1
+\end{lstlisting}
+When running the tests on the partner's code, an \verb|AttributeError| is raised because there is a typo in "isoceles", which should be "isosceles".
+To make the test continue, the typo in "isoceles" is modified, and then the partner's code is tested again.
+\subsection{Results of testing partner's code: after modification}
+\begin{lstlisting}
+python3  partner/test_driver.py
+-------------------------Tests for complex_adt.py--------------------
+test_complex_con() test: PASSED.
+real() test: PASSED.
+imag() test: PASSED.
+get_r() test: PASSED.
+get_phi() not (real < 0 and imag = 0) test: PASSED.
+get_phi() (real < 0 and imag = 0) test: PASSED.
+equal() test: PASSED.
+conj() test: PASSED.
+add() test: PASSED.
+sub() test: PASSED.
+mult() test: PASSED.
+recip() test: PASSED.
+div() test: PASSED.
+sqrt() (imag > 0) test: PASSED.
+sqrt() (imag < 0) test: PASSED.
+-------------------------Tests for triangle_adt.py-------------------
+test_triangle_con() normal test: PASSED
+test_triangle_con() except test: FAILED
+get_sides() test: PASSED.
+equal() true test: PASSED.
+equal() false test: PASSED.
+perim() test: PASSED.
+area() test: PASSED.
+is_valid() test: PASSED.
+tri_type() right test: FAILED.
+tri_type() equilat test: PASSED.
+tri_type() isosceles test: PASSED.
+tri_type() scalene test: PASSED.
+------------------------------------Total----------------------------
+Passed test number:  25
+Total test number:  27
+\end{lstlisting}
+After running the tests on the partner's code again, the output shows the partner's code passes 25 tests of the total 27 tests.\\\\
+The \verb|test_triangle_con except test| failed because my partner's code didn't raise an exception when some of the arguments of the constructor of \verb|TriangleT| are not positive. I then check if my partner denoted this assumption in the document comment instead of raising an exception, but the answer is no. So I should conclude there is a flaw in my partner's implementation in the constructor of \verb|TriangleT|.\\\\
+The \verb|test_tri_type_right test| failed because there is a logic flaw in my partner's implementation.
+\lstset{language=Python, basicstyle=\ttfamily\small, breaklines=true, showspaces=false,
+  showstringspaces=false, breakatwhitespace=true}
+The test case is as the following:
+\begin{lstlisting}
+def test_tri_type_right():
+	global testTot, passed
+	testTot += 1
+	try:
+		t1 = TriangleT(3,4,5)
+		t2 = TriangleT(4,5,3)
+		t3 = TriangleT(5,3,4)
+		assert t1.tri_type() == TriType.right
+		assert t2.tri_type() == TriType.right
+		assert t3.tri_type() == TriType.right
+		passed += 1
+		print("tri_type() right test: PASSED.")
+	except AssertionError:
+		print("tri_type() right test: FAILED.")
+\end{lstlisting}
+The partner's code is as the following:
+\begin{lstlisting}
+            if (a**2 + b**2) == c**2:
+                return TriType.right
+\end{lstlisting}
+Obviously, my partner forget to take into account that for right triangles, each side is possible to be the hypotenuse.\\\\
+To sum up, my partner's code passed 24 of 27 total test cases (if regarding the typo as a failed case). One of them is raised by typo, while two of them are raised by not considering all the conditions.
+It should also be noticed that my partner's code don't include any assumption in the \verb|@details| field. Because my test cases selection is based on my assumptions on the valid input. If I assume that no assumption showing in my partner's comment means all the inputs are accepted, then there could be more test failures derived from my partner's code.
+\section{Critique of Given Design Specification}
+For \verb|ComplexT|, the thing I like is that the whole ADT is very cohesive, where state variables and operations included are all related to mathematical complex numbers. However, the names of the methods are things that need to be improved. For example, \verb|real| and \verb|imag| are simply getters, so it is better to use prefix \verb|get_| to denote them. But these naming concepts may not be extended to methods like \verb|conj|,  \verb|recip| or \verb|sqrt|, because also they are getters, their names should be consistent with other binary complex number operations like \verb|add| etc. Another thing that should be improved is that the valid inputs for constructing a \verb|ComplexT| must be the type of float. Although it may be more difficult to implement \verb|ComplexT| that also accept integer or other types as the constructor argument, it is a possible improvement to make the whole ADT more consistent with the mathematical complex number concept.\\\\
+For \verb|TriangleT|, there are many areas I do not like. For example, by the default assumption, a \verb|TriangleT| can be formed even it is not geometrically valid. This can induces many weird behaviors of its method. 
+Another area is about type of the sides, in fact, a geometric triangles can have sides type of float, it is not necessary to narrow this type to just integer. The next area is is about the \verb|tri_type|, actually even triangles with integer sides could have multiple shape types. However, this design only want us to return one type. To achieve that, we must do some assumptions that when a triangle belongs to multiple types, which one should be return. By doing that, we are loosing some information. So my suggestion is that this method should return type of set of shapes to fully record the shape information.
+One thing to be improved is similar as \verb|ComplexT|, for methods like \verb|perim| and \verb|area|, it is better to use prefix \verb|get_| to denote them. Another thing is that if we make constructor checks if the triangle is geometrically valid, then \verb|is_valid| is redundant. For the principle of detecting likely changes, we may also need to add more constructors that can form a triangle using different elements like 1 phase and 2 sides to increase the reusability of our code.
+\section{Answers to Questions}
+\begin{enumerate}[(a)]
+\item In \verb|ComplexT|, there is no mutators, while selectors are  \verb|real|, \verb|imag|, \verb|get_r|, \verb|get_phi|, \verb|conj|, \verb|recip|,  and \verb|sqrt|. In  \verb|TriangleT|, there is no mutators, while selectors are \verb|get_sides|, \verb|perim|, \verb|area|, \verb|is_valid|, and \verb|tri_type|.
+\item  \textbf{Option 1} \\ State variables in \verb|ComplexT|: \verb|x| that denotes the real part and \verb|y| that denotes the imaginary part. \\ State variables in \verb|TriangleT|: \verb|a|, \verb|b| and \verb|c| that represents the three sides of the triangle respectively. \\
+\textbf{Option 2} \\ State variables in \verb|ComplexT|: \verb|x| that represents the real part, \verb|y| that represents the imaginary part, \verb|r| that represents the absolute value, \verb|phi| that represents the phase.\\ State variables in \verb|TriangleT|: \verb|a|, \verb|b| and \verb|c| that represents the three sides of the triangle respectively, \verb|perim| that represents the perimeter, \verb|area| that represents the area, \verb|is_valid| that check if the given triangle is geometrically valid and \verb|tri_type| that represents the type of current triangle.
+\item No. Because the definition of orders in complex numbers varies. For example, you can compare the real parts and ignore the imaginary parts; you can use the lexicographic order, comparing the real parts and then comparing the imaginary parts if the real parts are equal; you can also compare complex numbers by their modulus... It's hard for us to  predict which one meets the client's requirement, so it will be not necessary and not meaningful to add a methods for greater than and less than. 
+\item Yes, it is possible. In my opinion, the constructor of \verb|TriangleT| should raise an exception when it is given an invalid triangle. Because all the methods after the construction, such as \verb|get_sides|, \verb|perim|, \verb|area| and \verb|tri_type|, they all need the assumption that the triangle is geometrically valid, otherwise their output will be meaningless from the geometric view. For example, for an invalid "triangle" {1, 2, 3}, calculating its perimeter and area makes no sense, and you are not able to return any triangle type for it.
+\item It is a bad idea. When a state variable is set, its main function is to be reused in other methods to accelerate or simplify our computation. However, for the type of triangle, it is more like a "final" output, i.e. no method in the current implementation need them, which means the reusability of the type of triangle is low. Therefore, we do not need to 
+sacrifice the space complexity of our code to add a state variable whose use frequency is low.
+\item Poor performance often adversely affects the usability. For example, a software system that produces answers more slowly than the user requires is not user-friendly, i.e. the usability is bad, even if the answers are displayed in beautiful color.
+\item No. According to A RATIONAL DESIGN PROCESS: HOW AND WHY TO FAKE IT, a software design "process" will always  be an idealisation, which means we should always "fake" a rational design process. Some of reasons are listed below:
+\begin{itemize}
+\item In most cases the people who commission the building of a software system do not know exactly what they want and are unable to tell us all that they know.
+\item Even if we knew the requirements, there are many other facts that we need to know to design the software. Such details could only be released as we progress in the implementation.
+\item Even if we knew all of the relevant facts before we started, experience shows that human beings are unable to comprehend fully the plethora of details that must be taken into account in order to design and build a correct system. 
+\item Even if we could master all of the detail needed, all but the most trivial projects are subject to change for external reasons.
+\item Human errors can only be avoided if one can avoid the use of humans.
+\item We are often burdened by preconceived design ideas, ideas that we invented, acquired on related projects, or heard about in a class. Such ideas may not be derived from our requirements by a rational process.
+\item Often we are encouraged, for economic reasons, to use software that was developed for some other project. So we should share our software with another ongoing project to save effort.
+\end{itemize}
+\item Reusability may affect the reliability in both positive and negative way. The positive effect is that if we can use the codes which was proven to perform good in other modules, then we have the confidence that the code will also perform well in the current implementation, which will increase the reliability. However, one negative effect is that this kind of reuse may also propagates errors to the new implementation if its reliability has not been tested thoroughly. Another negative effect is that reuse principle can make the design more general that reduces the reliability of the codes. For example, we should not reuse the code for a  clock application that was designed for people as an alarm to implement another clock used in the scientific field, which requires extremely high precision.
+\item An example of this kind of abstraction is Java. As a portable programming language, Java works by first compiling the source code into bytecode. Then, the bytecode can be compiled into machine code with the Java Virtual Machine (JVM). As we use Java to programming, we do not necessarily know how hardware performs by the machine code derived from our source code. This process is a secret, i.e. hided information for us. Another example is Python, which is a dynamic, interpreted (bytecode-compiled) language, similar to Java, the bytecode interpreted will also be run on the python virtual machine. And this process is an abstraction on top of hardware. Even for low-level assembly languages, like NASM and RISC-V, they also provide some level of abstraction, where we do not need to write the binary machine code for each instruction, instead we can easily convert each of our instruction statement to some binary machine codes.
+\end{enumerate}
+\newpage
+
+\lstset{language=Python, basicstyle=\tiny, breaklines=true, showspaces=false,
+  showstringspaces=false, breakatwhitespace=true}
+%\lstset{language=C,linewidth=.94\textwidth,xleftmargin=1.1cm}
+
+\def\thesection{\Alph{section}}
+
+\section{Code for complex\_adt.py}
+
+\noindent \lstinputlisting{../src/complex_adt.py}
+
+\newpage
+
+\section{Code for triangle\_adt.py}
+
+\noindent \lstinputlisting{../src/triangle_adt.py}
+
+\newpage
+
+\section{Code for test\_driver.py}
+
+\noindent \lstinputlisting{../src/test_driver.py}
+
+\newpage
+
+\section{Code for Partner's complex\_adt.py}
+
+\noindent \lstinputlisting{../partner/complex_adt.py}
+
+\section{Code for Partner's triangle\_adt.py}
+
+\noindent \lstinputlisting{../partner/triangle_adt.py}
+
+\end {document}

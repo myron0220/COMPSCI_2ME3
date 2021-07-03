@@ -1,0 +1,368 @@
+\documentclass[12pt]{article}
+
+\usepackage{graphicx}
+\usepackage{paralist}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{pifont}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{color}
+\usepackage{comment}
+
+\usepackage{pifont}
+\usepackage{amsmath}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{color}
+\usepackage{comment}
+
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\labelenumii}{\theenumii.}
+\renewcommand{\labelenumiii}{\theenumiii.}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\bc}{\begin{center}}
+\newcommand{\ec}{\end{center}}
+\newcommand{\bsp}{\begin{sloppypar}}
+\newcommand{\esp}{\end{sloppypar}}
+\newcommand{\mname}[1]{\mbox{\sf #1}}
+\newcommand{\pnote}[1]{{\langle \text{#1} \rangle}}
+
+\oddsidemargin 0mm
+\evensidemargin 0mm
+\textwidth 160mm
+\textheight 200mm
+
+\pagestyle {plain}
+\pagenumbering{arabic}
+
+\newcounter{stepnum}
+
+\title{Assignment 2 Solution}
+\author{Name: Mingzhe Wang MacID: wangm235}
+\date{\today}
+
+\begin {document}
+
+\maketitle
+
+This report discusses the testing phase for \verb|CircleT|, \verb|TriangleT|, \verb|BodyT|, and  \verb|SceneT|. It also discusses the results
+of running the same tests on the partner files. The assignment specifications
+are then critiqued and the requested discussion questions are answered.
+
+\section{Assumptions and Exceptions} \label{AssumptAndExcept}
+For assignment 2, because we used a formal MIS to specify the assumptions and exceptions, the number of them is much smaller than assignment 1. Specifically, they are:
+
+~\newline\noindent
+\textbf{Assumptions}
+\begin{itemize} 
+\item For all the modules, the arguments provided to the access programs will be of the correct type.
+\end{itemize}
+\textbf{Exceptions}
+\begin{itemize}
+\item For \verb|__init__| in \verb|CircleT|, \verb|ValueError| is raised if radius or mass is not positive.
+\item For \verb|__init__| in \verb|BodyT|, \verb|ValueError| is raised  if the three sequences do not have the same length. 
+\item For \verb|__init__| in \verb|BodyT|, \verb|ValueError| is raised  if not all the masses of points are positive.
+\item For \verb|__init__| in \verb|TriangleT|, \verb|ValueError| is raised if side length or mass is not positive.
+
+\end{itemize}
+
+\section{Test Cases and Rationale} \label{Testing}
+\subsection{Test Cases}
+For assignment 2, there are totally 27 test cases performed, in each test cases there could be multiple assertions that can test the performance of the program to different inputs. However, it should be noticed that each test case is designed to test one branch/exception of a given method. Through this, it is easy to determine which statement is not reliable in a single method.
+\subsection{Rationale}
+Part of rationales of test cases selection are consisted with Assignment 1, they are: 
+\begin{itemize}
+\item The test cases should cover every branches of the tested method. If a method or constructor could raise certain exceptions, then these exceptions could be treated as branches, which means the test cases should also cover them. For example, there should be at least 3 test cases for testing \verb|__init__| in \verb|BodyT|. (two for the exception branches and one for the normal case.)
+\item For float numbers comparison, normally we only need to perform approximate equality under certain tolerated difference. Because we are using pytest for Assignment 2, they are dealt with function \verb|approx()|.
+\item Test cases that can be verified in another way easily should be chosen. Because they can be calculated manually quickly, however they may not be that easy for computers to calculate. Hence, they can help us verify the reliability of our program fast.\\\\
+For example, test cases like the following were chosen:
+\begin{lstlisting}
+BodyT([-1.0, 1.0, 0.0], [0.0, 0.0, math.sqrt(3)], 
+[2.8, 2.8, 2.8])
+\end{lstlisting}
+Another example is that for testing \verb|sim| in \verb|Scene|, we choose to simulate common cases likes falling motion and projectile motion.
+\item Test cases that use different mathematical types of numbers, such as negative numbers, rational numbers, irrational numbers, numbers expressed in scientific notation etc. should be chose. Because they can test the performance of program for different type of input.
+\item Test cases that use extremely large or small numbers as input should be chosen. For example, test cases like \verb|TriangleT(7.0313, 302, 0.00002, -0.000001)| and \verb|CircleT(-2.3e10, 2.3395934, math.sqrt(2), 5.3e10)| were chosen because they help test the reliability of the program in edge cases or boundary cases.
+\end{itemize}
+
+~\newline\noindent
+In addition, as what we have learned for the unit test part, there are many other goals we are trying to pursue in this assignment, which are:
+\begin{itemize}
+\item Test all the requirements in each function. As we are using a formal MIS for this assignment, when designing the test cases, we should go through all the requirements in the MIS, checking both sytax and semantic for any violation.
+\item Cover edge cases that cause unintended consequences, especially for empty lists or 0 inputs. For example, \verb|CircleT(0.0, 0.0, 0.0, 0.0)|, \verb|TriangleT(0.0, 0.0, 0.0, 0.0)|, and  \verb|BodyT([0.0], [0.0], [0.0, 0.0])| was chosen to test if the behavior of our program in this edge case is reasonable.
+\item Try to have an acceptable amount of code coverage. In my implementation, the cover of my testing cases is as the following, which I believe is an acceptable amount.
+\begin{lstlisting}
+Name               Stmts   Miss  Cover
+--------------------------------------
+src/BodyT.py          34      0   100%
+src/CircleT.py        17      0   100%
+src/Plot.py           16     14    12%
+src/Scene.py          30      0   100%
+src/Shape.py          10      4    60%
+src/TriangleT.py      17      0   100%
+src/test_All.py      205      2    99%
+src/test_expt.py      32      0   100%
+--------------------------------------
+TOTAL                361     20    94%
+\end{lstlisting}
+\item For function coverage, statement coverage, branch coverage, and conditional coverage, most of these principles are fully included in the previous rationale. For example, for testing \verb|__init__| in \verb|BodyT|, we have \verb|test_init_exception_len_not_equal|, \verb|test_init_exception_m_not_pos|, and a normal test case in the \verb|setup_method|.
+\end{itemize}
+
+~\newline\noindent
+Finally, for testing some complex method such as \verb|sim|, the testing process is: \\\\
+\begin{lstlisting}
+    def test_sim_scene1(self):
+        t, wsol = self.scene1.sim(10, 101)
+        t_counter = 0
+        for t_s, wsol_s in zip(t, wsol):
+            wsol_true = [10.0, 10.0 - 0.5 * 9.81 * t_counter**2,
+                0.0,  - 9.81 * t_counter]
+            assert t_s == approx(t_counter)
+            assert TestScene.__compare_two_seqs(wsol_s, 
+                wsol_true, 0.001)
+            t_counter += 0.1
+\end{lstlisting}
+First, generate two sequences, which are the expected solution and the program's output. (Each of these sequences consists of time t and corresponding variable values). Then for each time t, compare two sequences of corresponding variable values by the relative error formula that mentioned in the assignment instruction.\\\\
+By designing the test like this, we can compare all the output values in an iteration to avoid manually or randomly selecting some time t and its corresponding variable values, which could not guarantee the accuracy of the tests.
+\section{Results of Testing the Original Program}
+
+\begin{lstlisting}
+pytest --cov src
+========================= test session starts ==========================
+platform linux -- Python 3.6.9, pytest-3.3.2, py-1.5.2, pluggy-0.6.0
+rootdir: /nfs/u50/wangm235/wangm235/A2, inifile:
+plugins: cov-2.5.1
+collected 27 items                                                     
+
+src/test_All.py ...........................                      [100%]
+
+----------- coverage: platform linux, python 3.6.9-final-0 -----------
+Name               Stmts   Miss  Cover
+--------------------------------------
+src/BodyT.py          34      0   100%
+src/CircleT.py        17      0   100%
+src/Plot.py           16     16     0%
+src/Scene.py          30      0   100%
+src/Shape.py          10      4    60%
+src/TriangleT.py      17      0   100%
+src/test_All.py      204      2    99%
+src/test_expt.py      32      0   100%
+--------------------------------------
+TOTAL                360     22    94%
+
+
+====================== 27 passed in 0.92 seconds =======================
+\end{lstlisting}
+
+~\newline\noindent
+When running the tests on my code, there is no exception raised. My code passes all the 27 tests.
+
+\section{Results of Testing Partner's Code}
+\begin{lstlisting}
+pytest --cov partner
+========================= test session starts ==========================
+platform linux -- Python 3.6.9, pytest-3.3.2, py-1.5.2, pluggy-0.6.0
+rootdir: /nfs/u50/wangm235/wangm235/A2, inifile:
+plugins: cov-2.5.1
+collected 27 items                                                     
+
+partner/test_All.py ...........................                  [100%]
+
+----------- coverage: platform linux, python 3.6.9-final-0 -----------
+Name                   Stmts   Miss  Cover
+------------------------------------------
+partner/BodyT.py          35      0   100%
+partner/CircleT.py        17      0   100%
+partner/Scene.py          27      0   100%
+partner/Shape.py          10      4    60%
+partner/TriangleT.py      17      0   100%
+partner/test_All.py      204      2    99%
+partner/test_expt.py      32      0   100%
+------------------------------------------
+TOTAL                    342      6    98%
+
+
+====================== 27 passed in 1.10 seconds =======================
+\end{lstlisting}
+
+~\newline\noindent
+When running the tests on partner's code, there is no exception raised. Partner's  code passes all the 27 tests.
+
+~\newline\noindent
+This time, both my and my partner's code passes all the tests, which I think is largely owe to the formal MIS specification. This kind of specification increases the performance of the programs by providing the programmer with lots of useful information. For example, in the syntax field, it specifies all the types and exceptions that the implementation should have; while in the semantics field, it even lists all the concrete details of the operations by using formal mathematical notations, etc. All of these designs act like an common standard to decrease the divergences when someone is trying to implement it. Hence, it guarantees an good-performance implementation.
+
+~\newline\noindent
+In addition, I would like to provide some  suggestions for my partner's code:
+\begin{itemize}
+\item Currently, all the functions do not have doxygen comments of the type \verb|@details|. He(she) needs to add this kind of comment in the future, because it provides the client of our programmers much useful information especially when they are dealing with complex problems.
+\item \verb|__sum| in \verb|BodyT| could be dropped, because there is already an original function \verb|sum| in Python that can perform this task.
+\end{itemize}
+
+~\newline\noindent
+Comparing assignment 2 with assignment 1, this time my partner's code passes all the tests rather than failing 3 cases last time. What I leaned from this assignment is that in the future when dealing with large-scale programming project that needs programmers' collaboration, an MIS is almost a necessary tool to ensure the quality of the project.
+
+\section{Critique of Given Design Specification}
+\subsection{What I like}
+In general, I like this formal MIS specification given for assignment 2. 
+\begin{itemize}
+\item The input, output, and desired behavior is specified clearly. The mathematical notations and the formal language it used decrease possible ambiguity when programmer wants to implement it. 
+\item  Its content is consistent, if we know how to interpret some previous parts to our programming language, then it's not hard for us to interpret any parts that come after them.
+\item Module design in this specification is consistent. For example, each of the \verb|CircleT|, \verb|TriangleT|, or \verb|BodyT| as a whole object follows the interface \verb|Shape|, sharing the same behaviors.
+\item Module design in this specification is high cohesion and low coupling. For example, for \verb|CircleT|, \verb|TriangleT|, and \verb|BodyT|, it only depends on an shared interface \verb|Shape| and is independent of each other. And for each of these modules, its content is high cohesion \--- it provides the basic physic information of that object, such as the position and the mass etc.
+\item Generality is another thing I like this MIS. At first, the specification only tries to implement a circle and triangle object. However, it later defines an \verb|BodyT| object that consists of finite mass points. That kind of generality provides us the possibility to save all the scenes we may see in the future. (Most object can be defined as a set of mass points in physics.
+\end{itemize}
+
+\subsection{What areas need improvement}
+\begin{itemize}
+\item The consistency of \verb|CircleT|, \verb|TriangleT|, and \verb|BodyT| should be improved. Because if we start from the module name, we will think that the \verb|BodyT| is an general version of \verb|CircleT| and \verb|TriangleT|. However, \verb|CircleT| or \verb|TriangleT| actually consists of all the mass points in that shape, while \verb|BodyT| consists of finite mass points that we define. For example, the \verb|m_inert| formula for triangles isn't based on point masses at the vertices of the triangle, but rather a thin piece of material with the mass uniformly distributed across the entire triangle. This kind of inconsistency could bring us some kinds of confusion, thus it needs to be improved. My suggestion is to define another module that consists of all the points surrounded by lines connecting all the vertices to make this solution more general.
+
+\item The local functions in \verb|Scene| module can be extremely hard to interpret. I think a large part of the confusion comes from the \verb|ode| function's semantic:\\\\
+\noindent $\text{ode}: (\text{seq [4] of } \mathbb{R}) \times \mathbb{R}
+\rightarrow \text{seq [4] of } \mathbb{R}$\\
+\noindent $\text{ode}(w, t) \equiv [w[2], w[3], F_x(t)/s.\text{mass()}, F_y(t)/s.\text{mass()}]$\\\\
+In the second line, the specification implicitly uses a variable $w$ of the type $\text{seq [4] of } \mathbb{R}$ where it does not tell the programmer what more detailed meaning about $w$. I think some additional comments should be added to this part to avoid creating unnecessary confusion for programmers.
+\end{itemize}
+\subsection{Change proposal}
+The thing I want to propose to change is the \verb|TriangleT| module. Although it is called TriangleT, it is actually an object of shape equilateral triangle. We do not need to narrow our design to such a range, in fact, the \verb|TriangleT| should be type of any triangles, and its constructor can be overloading such that we can use the combination of angles and side lengths to form our triangles. That could make the implementation more complex, but that also makes this module more general to solve many future programs that are about triangle objects.
+
+\subsection{Does the interface provide checks?}
+Yes. In the \verb|syntax| field, the specification list the type of all the input and output and the exception behavior for each access program; In the \verb|semantic| field, the specification provide \verb|state invariant| that can be useful for proving program correctness and many other detailed statements; also, in other fields like \verb|Uses|, \verb|template|, \verb|exported|, it also provide programmer a reference to check which module they want to import/export and which function should they consider to be having been implemented. I think all of them provide some kinds of checks that could help programmers to avoid generating an exception. To do this, we just need to go through the MIS again searching for any violation after we have implemented the program.
+
+\section{Answers}
+
+\begin{enumerate}[a)]
+
+\item I think that depends on the state variables that getters and setters interact with. If the state variables are simply passed values from the constructor without any operation, logic, or type check, then they may not require testing. However, when the the state variables are transited by doing some operations on the arguments, then we need to design tests for these kind of getters or setters. For example, the state variable \verb|m_inert| in \verb|BodyT| is documented as $ \mathit{moment} :=  \text{mmom}(x_s, y_s, m_s) - \text{sum}(m_s) (\text{cm}(x_s, m_s)^2 + \text{cm}(y_s, m_s)^2)$ in MIS. To check the reliability of this transition, we need to design a test for the getter \verb|m_inert()|. Another cases we need to test getters and setters should be in some other programming language, unlike Python, that highly depends on the type of parameter, if we declaim the type of state variables in MIS, then we need tests to make sure that logic is being tested.
+
+\item I would like to set a test to check if the returned function arguments of getters have the type of $\mathbb{R} \rightarrow \mathbb{R}, \mathbb{R} \rightarrow \mathbb{R}$ and if the given function arguments of setters have the type of $\mathbb{R}, \mathbb{R}$. In addition, we may make a plot to manually test if this force function is as what we expect.
+
+\item First, using \verb|matplotlib| generate two figures, one based on the expected data, one bases on the data output by the program. Second, use \verb|plt.savefig()| command to save these two figures as two .png files. Third, define a function that takes two images as parameter, converts them to two \verb|pandas| objects of type float, and use some kind of equations to calculate a value representing their relative error. If that error is smaller than our acceptable value, then the test passes. Otherwise, we will say the test fails.
+
+\item \noindent $\text{abs}: \mathbb{R} \rightarrow \mathbb{R}$\\
+		\noindent $\text{abs}(x) \equiv (x \geq 0 \Rightarrow x | x < 0 \Rightarrow -x)$\\\\
+		 \noindent $\text{max}: \text{seq of } \mathbb{R} \rightarrow \mathbb{R}$\\
+		 \noindent $\text{max}(x_s) \equiv m$, such that $(\forall i : \mathbb{N} | i \in [0..|x_s|-1] : m \geq (x_s)_i)$\\\\
+		 \noindent (Note: we assume $|x_{cal}| = |x_{true}|$)\\
+		 \noindent $\text{close\_enough}: \text{seq of } \mathbb{R} \times \text{seq of } \mathbb{R} \rightarrow \mathbb{B}$\\
+		 \noindent $\text{close\_enough}(x_{cal}, x_{true}) \equiv$ $$ \frac{\text{max}(i: \mathbb{N} | i \in [0..|x_{cal}|-1] : \text{abs}(x_{cal} - x_{true}))}{\text{max}(i: \mathbb{N} | i \in [0..|x_{cal}|-1] : \text{abs}(x_{true}))} < \epsilon$$, where $\epsilon$ is a small number that we define.
+		 
+\item No, there should not be exceptions for negative coordinates. Because in physics, we can choose any object as our reference frame, and even negative coordinates are meaningful. For example, to trace a robot's motion in a given room, we can select the middle of the room as the origin of the coordinate system, then even the negative coordinates records some places where the robot is. Therefore, there is no need to throw exceptions for negative coordinates.
+
+\item Because only the routine \verb|TriangleT| actually has the transition operation for state variables $s$ and $m$, we only need to prove that $s > 0 \land m > 0$ holds true after assignment statements.
+\begin{align*}
+&\phantom{{}==} s > 0 \land m > 0 \\
+&\Rightarrow[ s := s_s ] \langle Assignment \rangle \\
+&\phantom{{}==}s_s > 0 \land m > 0 \\
+&\Rightarrow[ m := m_s ] \langle Assignment \rangle  \\
+&\phantom{{}==}s_s > 0 \land m_s > 0 \\
+&\equiv \langle \text{Left identity of implication} \rangle\\
+&\phantom{{}==} \text{True} \Rightarrow s_s > 0 \land m_s > 0\\
+&\equiv \langle \text{Contrapositive; Def. of False} \rangle\\
+&\phantom{{}==} \neg (s_s > 0 \land m_s > 0) \Rightarrow \text{False} \-- \text{This is exception.}
+\end{align*}
+Therefore, we prove that state variable will never be violated.
+\item
+\begin{lstlisting}
+[x for x in range(5, 20) if x % 2 == 1] 
+\end{lstlisting}
+
+\item 
+\begin{lstlisting}
+from functools import reduce
+
+def remove_upper(s):
+    res = [c for c in s if c.islower()]
+    s2 = reduce(lambda x, y: x + y, res, '')
+    return s2
+
+\end{lstlisting}
+
+\item According to Fundamentals of Software Engineering, abstraction is naturally combined with the generality principle. For example, producing intermediate code for an abstract machine, rather than producing object code directly for a concrete one, allows us to build a general compiler that can be adapted, with minor modifications, to the production of code for different machines, thus enhancing the reusability quality.
+
+\item The scenario that a module is used by many other modules would be better. Because in this scenario, we only need to be careful about modification in that single module. However, if a module uses many other modules, then we need to be careful about modification in all other modules. If any of those modules are modified, there is a possibility that the single module depending on them could not work properly. That can make the maintenance or improvement of the project unachievable.
+
+\end{enumerate}
+
+\newpage
+
+\lstset{language=Python, basicstyle=\tiny, breaklines=true, showspaces=false,
+  showstringspaces=false, breakatwhitespace=true}
+%\lstset{language=C,linewidth=.94\textwidth,xleftmargin=1.1cm}
+
+\def\thesection{\Alph{section}}
+
+\section{Code for Shape.py}
+
+\noindent \lstinputlisting{../src/Shape.py}
+
+\newpage
+
+\section{Code for CircleT.py}
+
+\noindent \lstinputlisting{../src/CircleT.py}
+
+\newpage
+
+\section{Code for TriangleT.py}
+
+\noindent \lstinputlisting{../src/TriangleT.py}
+
+\newpage
+
+\section{Code for BodyT.py}
+
+\noindent \lstinputlisting{../src/BodyT.py}
+
+\newpage
+
+\section{Code for Scene.py}
+
+\noindent \lstinputlisting{../src/Scene.py}
+
+\newpage
+
+\section{Code for Plot.py}
+
+\noindent \lstinputlisting{../src/Plot.py}
+
+\newpage
+
+\section{Code for test\_All.py}
+
+\noindent \lstinputlisting{../src/test_All.py}
+
+\newpage
+
+\section{Code for Partner's CircleT.py}
+
+\noindent \lstinputlisting{../partner/CircleT.py}
+
+\newpage
+
+\section{Code for Partner's TriangleT.py}
+
+\noindent \lstinputlisting{../partner/TriangleT.py}
+
+\newpage
+
+\section{Code for Partner's BodyT.py}
+
+\noindent \lstinputlisting{../partner/BodyT.py}
+
+\newpage
+
+\section{Code for Partner's Scene.py}
+
+\noindent \lstinputlisting{../partner/Scene.py}
+
+\newpage
+
+\end {document}

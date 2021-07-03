@@ -1,0 +1,828 @@
+\documentclass[12pt,fleqn]{examtst}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{hhline}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{enumerate}
+\usepackage{hyperref}
+%% Comments
+
+\usepackage{color}
+
+\newif\ifcomments\commentstrue
+
+\ifcomments
+\newcommand{\authornote}[3]{\textcolor{#1}{[#3 ---#2]}}
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\else
+\newcommand{\authornote}[3]{}
+\newcommand{\todo}[1]{}
+\fi
+
+\newcommand{\wss}[1]{\authornote{blue}{SS}{#1}}
+
+\begin{document}
+
+\newcommand{\soln}{n} %y for yes and n for no
+
+\lstset{language=python, basicstyle=\ttfamily, breaklines=true,
+  showspaces=false, showstringspaces=false, breakatwhitespace=true, texcl=true,
+  escapeinside={\%*}{*)}}
+
+\newcommand{\codeit}[1]{\texttt{\textit{#1}}}
+
+\begin{center}
+  {\large \bf COMP SCI 2ME3 and SFWR ENG 2AA4 Final Examination}\\[1ex]
+  {\large \bf McMaster University}\\[1ex]
+  \ifthenelse{\equal{\soln}{y}}{\large {\bf Answer Key:} Large arrow
+    ($\Longleftarrow$) for correct% , small ($\leftarrow$) for partially
+    % correct
+  }{}
+\end{center}
+
+\medskip
+
+\noindent
+DAY CLASS, \textbf{Version 1}  \hfill Dr.~S.~Smith \\
+DURATION OF EXAMINATION: 2.5 hours (+ 30 minutes buffer time)\\
+MCMASTER UNIVERSITY FINAL EXAMINATION \hfill April 28, 2021
+
+\medskip
+
+\noindent
+\rule[3 mm]{\textwidth}{0.5mm}
+
+%\begin{minipage}[t]{1.0\textwidth}
+
+NAME: \wss{Enter your name here} Mingzhe Wang\\[1ex]
+
+Student ID: \wss{Enter your student number here} 400316660\\[2mm]
+
+\noindent
+\rule[3 mm]{\textwidth}{0.5mm}
+
+This examination paper includes \noofpages pages and
+8 % VARIABILITY
+questions. You are responsible for ensuring that your copy of the examination
+paper is complete. Bring any discrepancy to the attention
+of your instructor.\\
+
+\noindent
+\emph{By submitting this work, I certify that the work represents solely my own
+independent efforts. I confirm that I am expected to exhibit honesty and use
+ethical behaviour in all aspects of the learning process.  I confirm that it is
+my responsibility to understand what constitutes academic dishonesty under the
+\href{https://secretariat.mcmaster.ca/app/uploads/Academic-Integrity-Policy-1-1.pdf}
+{Academic Integrity Policy}}.\\
+
+\noindent
+\textbf{Special Instructions}:
+
+\begin{enumerate}
+
+\item For taking tests remotely: 
+\begin{itemize}
+\item Turn off all unnecessary programs, especially Netflix, YouTube, games like
+  Xbox or PS4, anything that might be downloading or streaming.
+\item If your house is shared, ask others to refrain from doing those activities
+  during the test.
+\item If you can, connect to the internet via a wired connection.
+\item Move close to the Wi-Fi hub in your house. 
+\item Restart your computer, 1-2 hours before the exam. A restart can be very
+  helpful for several computer hiccups.
+\item Use a VPN (Virtual Private Network) since this improves the connection to
+  the CAS servers.
+\item Commit and push your tex file, compiled pdf file, and code files
+  frequently.  As a minimum you should do a commit and push after completing
+  each question.
+\item Ensure that you push your solution (tex file, pdf file and code files)
+  before time expires on the test.  The solution that is in the repo at the
+  deadline is the solution that will be graded.
+\item If you have trouble with your git repo, the quickest solution may be to
+  create a fresh clone.
+\end{itemize}
+\item It is your responsibility to ensure that the answer sheet is properly
+  completed. Your examination result depends upon proper attention to the
+  instructions.
+\item All physical external resources are permitted, including textbooks, calculators,
+  computers, compilers, and the internet.
+\item The work has to be completed individually.  Discussion with others is
+  strictly prohibited.
+\item Read each question carefully.
+\item Try to allocate your time sensibly and divide it appropriately between the
+  questions.  Use the allocated marks as a guide on how to divide your time
+  between questions.
+\item The quality of written answers will be considered during grading.  Please
+  make your answers well-written and succinct.
+\item The set $\mathbb{N}$ is assumed to include $0$.
+\end{enumerate}
+%\end{minipage}\\
+
+\examheader{CS2ME3/SE2AA4 \ifthenelse{\equal{\soln}{y}} {\hfill SOLUTIONS} }
+
+\renewcommand{\labelenumi}{\Alph{enumi}.}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\question{5 marks} What are the problems with using ``average lines of code
+written per day'' as a metric for programmer productivity?
+
+\bigskip
+
+\noindent \wss{Provide your reasons in the itemized list below.  Add more items
+  as required.}
+
+\begin{itemize}
+\item The result based on this metric is partial because it does not consider the software qualities of the written programs like the reliability, performance, verifiability, maintainability etc.
+\item The "fake the rational design process" is also meaningful for testing a programmer's productivity.
+\item The average line of code indicator does not contain any information of the verification. What if this programmer has a high aver. line. of code while most of these codes have bugs?
+\item The program's productivity should also consider the design and document writing behavior. Because for a programmer, implementing code is only part of his work, while most of the work is to design a good project and writing the corresponding document (SRC, MG, MIS).
+\item "Per day" is absolutely not right. Some people even work during the the weekend while still be low productive. We need a some common assumptions and criterion like working 5 hours in work day for this criterion to work.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\question{5 marks} Critique the following requirements specification
+for a new cell phone application, called CellApp.  Use the following criteria
+discussed in class for judging the quality of the specification: abstract,
+unambiguous, and validatable.  How could you improve the requirements
+specification?
+
+\bigskip
+
+``The user shall find CellApp easy to use.''
+
+\bigskip
+
+\noindent \wss{Fill in the itemized list below with your answers.  Leave the
+  word in bold at the beginning of each item.}
+
+\begin{itemize}
+\item \textbf{Abstract} - Not abstract. Because we do not need to name this application ``CellApp".
+\item \textbf{Unambiguous} - Ambiguous. Because it doesn't define a typical user or the ``esay to use" term.
+\item \textbf{Validatable} - Not validatable. Because an ambiguous program cannot be validatable.
+\item \textbf{How to improve} - First, ask the client to provide some specific using scenario to help specify the typical user group. Second, measure the "easy to use" indicator by designing surveys to avoid the subjective and ambiguous judgment by human. Third, we can just call this program ``project xxx" before its releasing to the client to make it more abstract.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\question{5 marks} The following module is proposed for the maze tracing robot
+we discussed in class (L20).  This module is a leaf module in the decomposition
+by secrets hierarchy.
+
+\begin{description}
+\item [Module Name] find\_path
+\item [Module Secret] The data structure and algorithm for finding the shortest
+  path in a graph.
+\end{description}
+
+\noindent \wss{Fill in the answers to the questions below.  For each item you
+  should leave the bold question and write your answer directly after it.}
+
+\begin{enumerate}
+\item \textbf{Is this module Hardware Hiding, Software Decision Hiding or
+    Behaviour Hiding?  Why?}
+
+  It is Software Decision Hiding, because it is both an application data type module (hides implementation of certain variables) and software utility module (hides algorithms used in several other modules).
+
+\item \textbf{Is this a good secret?  Why?}
+
+  No. The principle is "one module one secret", however, this module combines data structure and algorithm together.
+
+\item \textbf{Does the specification for maze tracing robot require environment
+    variables?  If so, which environment variables are needed?}\\
+ Yes. For example, the file input, the physical button, and the start and end position.
+  
+
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\question{5 marks} Answer the following questions assuming that you are in doing
+your final year capstone in a group of 5 students.  Your project is to write a
+video game for playing chess, either over the network between two human
+opponents, or locally between a human and an Artificial Intelligence (AI)
+opponent.
+
+\bigskip
+
+\noindent \wss{Fill in the answers to the questions below.  For each item you
+  should leave the bold question and write your answer directly after it.}
+
+\begin{enumerate}
+  
+\item \textbf{You have 8 months to work on the project.  Keeping in mind that we
+  usually need to fake a rational design process, what major milestones and what
+  timeline for achieving these milestones do you propose?  You can indicate the
+  time a milestone is reached by the number of months from the project's start date.}
+
+ \begin{itemize}
+ \item Requirements (Problem Statement, Development Plan, and SRS) 2-month\\Note: should also design System VnV Plan during this time
+ \item Design (MG and MIS) 2-month\\Note: should also design Integration VnV Plan and UnitVnV Plan during this time
+ \item Implementation (Code) 1-month
+ \item Verification (V\&V Report) 2-month
+ \item Delivery and Maintenance(prepare for final presentation and fix any errors discovered) 1-month
+ \end{itemize}
+  
+\item \textbf{Everything in your process should be verified, including the
+    verification.  How might you verify your verification?}\\\\
+\textbf{By Mutation Testing}. 
+\begin{itemize}
+\item Generate changes to the source code, called mutants, which become code faults
+\item Mutants include changing an operation, modifying constants, changing the order of execution, etc.
+\item The adequacy of a set of tests is established by running the tests on all generated mutants
+\item The goal is to kill the mutants
+\end{itemize}
+
+  
+  
+\item \textbf{How do you propose verifying the installability of your game?}
+
+  Using Virtual Machine to set up different environments or using tools like Docker.
+  
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\question{5 marks} As for the previous question, assume you are doing a final
+year capstone project in a group of 5 students.  As above, your project
+is to write a video game for playing chess, either over the network between two
+human opponents, or locally between a human and an Artificial Intelligence
+(AI) opponent.  The questions below focus on verification and testing.
+
+\bigskip
+
+\noindent \wss{Fill in the answers to the questions below.  For each item you
+  should leave the bold question and right your answer directly after it.}
+
+\begin{enumerate}
+\item \textbf{Assume you have 4 work weeks (a work week is 5 days) over the
+    course of the project for verification activities.  How many collective
+    hours do you estimate that your team has available for verification related
+    activities?  Please justify your answer.}
+
+  Assuming average 2 hours per day and half of days will be consumed for other reasons, then maybe only \textbf{20 hours}.  Because different team members may have personal timelines during this time and the time consumed for the team communication to get everyone understood is also very long.
+  
+\item \textbf{Given the estimated hours available for verification, what verification
+    techniques do you recommend for your team?  Please list the techniques,
+    along with the number of hours your team will spend on each technique, and
+    the reason for selecting this technique.}
+
+  \begin{itemize}
+  \item Continuous Integration Testing. Build a server that can perform regression tests each time the team member push their code. That process will automatically check the code while the code are being implemented, therefore only the initial design and the following maintainance takes time. - 10 hours.
+  \item Fault Testing. This technology can calculate the exception rate in a black-box way to save our time. - 2 hours. 
+  \item Code Walkthrough. This could guarantee our code's reliability by logic checking instead of only empirical testing  - 8 hours (2 hours at the beginning, 2 in the middle, 4 for the final discussion).
+  \end{itemize}
+  
+\item \textbf{Is the oracle problem a concern for implementing your game?  Why
+    or why not?  If it is a concern, how do you recommend testing your software?}
+	Yes. Because for a chess game, there is not a winning strategy been discovered currently, and that makes most of the testing hard to validate. (Because you do not know if the AI is playing in the wisdom way). I suggest testing by strategy without an oracle. That is :\\
+	\begin{itemize}
+	\item Parallel testing
+	\item By some special cases that can be easier to calculated. For example, the remaining board is proved to has a winning strategy by one player.
+	\end{itemize}
+	
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\question{5 marks} Consider the following natural language specification for a
+function that looks for resonance when the input matches an integer multiple of
+the wavelengths 5 and 7. Provided an integer input between 1 and 1000, the
+function returns a string as specified below:
+
+\begin{itemize}
+\item If the number is a multiple of 5, then the output is “resonance 5”
+\item If the number is a multiple of 7, then the output is “resonance 7”
+\item If the number is a multiple of both 5 and 7, then the output is “resonance
+  5 and 7”
+\item Otherwise, the output is “no resonance”
+\end{itemize}
+
+You can assume that inputs outside of the range 1 to 1000 do not occur.
+
+\begin{enumerate}
+\item What are the sets $D_i$ that partition $D$ (the input domain) into a
+  reasonable set of equivalence classes?
+
+  \wss{answer here - you can answer in natural language, or using mathematical
+    notation.}
+    \begin{itemize}
+    \item Set of the number which is a multiple of 5 but not a multiple of both 5 and 7.
+    \item Set of the number which is a multiple of 7 but not a multiple of both 5 and 7.
+    \item Set of the number which is a multiple of both 5 and 7.
+    \item Set of the number which is neither a a multiple of 5 nor a multiple of 7.
+    \end{itemize}
+    
+
+\item Given the sets $D_i$, and the heuristics discussed in class, how would you
+  go about selecting test cases?
+
+  \wss{answer here - you don't need specific test cases; your answer should
+    characterize how all significant test cases are to be chosen.}
+    \begin{itemize}
+    \item Test for boundary conditions suggests $1, 5 - 1, 7 + 1, 35 + 1$ etc.
+    \item Black box test suggests normal cases like 5, 7, 35, 14, 6 etc. 
+    \item The worst case of the program suggests a number that is not a multiple of 5 or 7, such as 6.
+    \item Condition-Coverage suggests all different combinations of the if expression.
+    \item Path-Coverage characterize the test cases such as 5, 7, 35, and 1.
+    \item The statement coverage or Edge coverage cases will be covered in the above cases for this question.
+    \end{itemize}
+    
+  
+\end{enumerate}
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\question{5 marks} Below is a partial specification for an MIS for the game of
+tic-tac-toe (\url{https://en.wikipedia.org/wiki/Tic-tac-toe}).  You should
+complete the specification.
+
+\bigskip
+
+\wss{The parts that you need to fill in are marked by comments, like this one.
+  You can use the given local functions to complete the missing specifications.
+  You should not have to add any new local functions, but you can if you feel it
+  is necessary for your solution.  As you edit the tex source, please leave the
+  \texttt{wss} comments in the file.  You can put your answer immediately
+  following the comment.}
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+SIZE = 3 {\it //size of the board in each direction}\\
+
+\subsubsection* {Exported Types}
+
+cellT = \{ X, O, FREE \} \\
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{7cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+init & ~ & ~ & ~\\
+\hline
+move & $\mathbb{N}$, $\mathbb{N}$ & ~ & OutOfBoundsException, InvalidMoveException\\
+\hline
+getb & $\mathbb{N}$, $\mathbb{N}$ & cellT & OutOfBoundsException\\
+\hline
+get\_turn & ~ & cellT & ~\\
+\hline
+is\_valid\_move & $\mathbb{N}$, $\mathbb{N}$ & $\mathbb{B}$ & OutOfBoundsException\\
+\hline
+is\_winner & cellT & $\mathbb{B}$ & ~\\
+\hline
+is\_game\_over & ~ & $\mathbb{B}$ & ~\\
+\hline
+
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+$b$: boardT\\
+$\mathit{Xturn}$: $\mathbb{B}$
+
+\subsubsection* {State Invariant}
+
+\wss{Place your state invariant or invariants here}\\
+
+\subsubsection* {Assumptions}
+
+The init method is called for the abstract object before any other access routine is called for that
+object.  The init method can be used to return the state of the game to the state of a new game.
+
+\subsubsection* {Access Routine Semantics}
+
+init():
+\begin{itemize}
+\item transition: 
+$$\mathit{Xturn}, b := \text{true}, 
+< \begin{array}{c}
+< \mbox{FREE}, \mbox{FREE}, \mbox{FREE} >\\
+< \mbox{FREE}, \mbox{FREE}, \mbox{FREE} >\\
+< \mbox{FREE}, \mbox{FREE}, \mbox{FREE} >\\
+\end{array} >
+$$
+\item exception: none
+\end{itemize}
+
+\noindent move($i$, $j$):
+\begin{itemize}
+\item transition: $\mathit{Xturn}, b[i, j] := \neg \mathit{Xturn}, (\mathit{Xturn} \Rightarrow \mbox{X} | \neg
+\mathit{Xturn} \Rightarrow \mbox{O})$
+\item exception
+$$exc := (\mbox{InvalidPosition}(i, j) \Rightarrow \mbox{OutOfBoundsException} | \neg \mbox{is\_valid\_move}(i, j)
+\Rightarrow \mbox{InvalidMoveException})$$
+\end{itemize}
+
+\noindent getb(i, j):
+\begin{itemize}
+\item output: $\mathit{out} := b[i, j]$
+\item exception
+$exc := (\mbox{InvalidPosition}(i, j) \Rightarrow \mbox{OutOfBoundsException})$
+\end{itemize}
+
+\noindent get\_turn():
+\begin{itemize}
+\item output: \wss{Return the cellT that corresponds to the current turn}\\
+$out := (Xturn \Rightarrow X \mid \lnot Xturn \Rightarrow O)$
+\item exception: none
+\end{itemize}
+
+\noindent is\_valid\_move(i, j):
+\begin{itemize}
+\item output: $\mathit{out} := (b[i][j] = \mbox{FREE})$ 
+\item exception $exc := (\mbox{InvalidPosition}(i, j) \Rightarrow \mbox{OutOfBoundsException})$
+\end{itemize}
+
+\noindent is\_winner(c):
+\begin{itemize}
+\item output: $\mathit{out} := \mbox{horizontal\_win}(c, b) \vee \mbox{vertical\_win}(c, b) \vee
+\mbox{diagonal\_win}(c, b)$ 
+\item exception: none
+\end{itemize}
+
+\noindent is\_game\_over():
+\begin{itemize}
+\item output: \wss{Returns true if X or O wins, or if there are no more moves remaining}\\
+$out :=$ $is\_winner() \lor \lnot (\exists(i, j : \mathbb{N} \mid 0 \leq i, j \leq SIZE - 1 : is\_valid\_move(i, j)))$
+\item exception: none
+\end{itemize}
+
+\subsubsection* {Local Types}
+
+boardT = sequence [SIZE, SIZE] of cellT
+
+\subsubsection* {Local Functions}
+
+\noindent \textbf{InvalidPosition}: $\mathbb{N}$ $\times$ $\mathbb{N}$ $\rightarrow$ $\mathbb{B}$\\
+~\newline
+InvalidPosition$(i, j) \equiv \neg ( ( 0 \leq i < \mbox{SIZE} ) \wedge ( 0 \leq j < \mbox{SIZE}))$
+
+~\newline
+
+\noindent \textbf{count}: cellT $\rightarrow$ $\mathbb{N}$\\
+~\newline
+\wss{For the current board return the number of occurrences of the cellT
+  argument}\\ count$(c) \equiv \forall(i, j : \mathbb{N} \mid 0 \leq i, j \leq SIZE - 1 \land b[i][j] = c : 1)$
+~\newline
+
+
+~\newline
+
+\noindent \textbf{horizontal\_win} : cellT $\times$ boardT $\rightarrow$ $\mathbb{B}$\\
+~\newline
+horizontal\_win$(c, b) \equiv \exists (i : \mathbb{N} | 0 \leq i < \mbox{SIZE} : b[i, 0] = b[i, 1] = b[i, 2] = c)$
+
+~\newline
+
+\noindent \textbf{vertical\_win} : cellT $\times$ boardT $\rightarrow$ $\mathbb{B}$\\
+~\newline
+vertical\_win$(c, b) \equiv \exists (j : \mathbb{N} | 0 \leq j < \mbox{SIZE} : b[0, j] = b[1, j] = b[2, j] = c)$
+
+~\newline
+
+\noindent \textbf{diagonal\_win} : cellT $\times$ boardT $\rightarrow$ $\mathbb{B}$\\
+~\newline
+\wss{Returns true if one of the diagonals for the board has all of the entries
+  equal to cellT}\\ diagonal\_win$(c, b) \equiv (b[0, 0] = b[1, 1] = b[2, 2] = c) \lor (b[0, 2] = b[1, 1] = b[2, 0] = c)$
+~\newline
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\question{5 marks} For this question you will implement in Java an ADT for a 1D
+sequence of real numbers.  We want to take the mean of the numbers in the
+sequence, but as the following web-page shows, there are several different
+algorithms for doing this: \url{https://en.wikipedia.org/wiki/Generalized_mean}
+
+Given that there are different options, we will use the strategy design pattern,
+as illustrated in the following UML diagram:
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[scale=0.7]{Seq1D_Mean_Strategy_UML.png}
+\end{center}
+\caption{UML Class Diagram for Seq1D with Mean Function, using Strategy
+  Pattern} \label{Fig_UML_Strategy}
+\end{figure}
+
+You will need to fill in the following blank files:
+\texttt{MeanCalculator.java}, \texttt{HarmonicMean.java},
+\texttt{QuadraticMean.java}, and \texttt{Seq1D.java}.  Two testing files are
+also provided: \texttt{Expt.java} and \texttt{TestSeq1D.java}.  The file
+\texttt{Expt.java} is pre-populated with some simple experiments to help you see
+the interface in use, and do some initial testing.  You are free to add to this
+file to experiment with your work, but the file itself isn't graded.  The
+\texttt{TestSeq1D.java} is also not graded.  However, you may want to create
+test cases to improve your confidence in your solution.  The stubs of the
+necessary files are already available in your \texttt{src} folder.  The code
+will automatically be imported into this document when the \texttt{tex} file is
+compiled.  You should use the provided Makefile to test your code.  You will NOT
+need to modify the Makefile.  The given Makefile will work for \texttt{make
+  test}, without errors, from the initial state of your repo.  The \texttt{make
+  expt} rule will also work, because all lines of code have been commented out.
+Uncomment lines as you complete work on each part of the modules relevant to
+those lines in \texttt{Expt.java} file.  As usual, the final test is whether the
+code runs on mills.  You do not need to worry about doxygen comments.
+
+Any exceptions in the specification have names identical to the expected Java
+exceptions; your code should use exactly the exception names as given in the
+spec.
+
+Remember, your code needs to implement the given specification so that the
+interface behaves as specified.  This does NOT mean that the local functions
+need to all be implemented, or that the types used internally to the spec need
+to be implemented exactly as given.  If you do implement any local functions,
+please make them private.  The real type in the MIS should be implemented by
+\texttt{Double} (capital D) in Java.
+
+\wss{Complete Java code to match the following specification.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\section* {Mean Calculator Interface Module}
+
+\subsection*{Interface Module}
+
+MeanCalculator
+
+\subsection* {Uses}
+
+None
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+None 
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{5cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+meanCalc & seq of $\mathbb{R}$ & $\mathbb{R}$ & ~\\
+\hline
+\end{tabular}
+
+\subsubsection* {Considerations}
+
+meanCalc calculates the mean (a real value) from a given sequence of reals.
+The order of the entries in the sequence does not matter.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\section* {Harmonic Mean Calculation}
+
+\subsection*{Template Module inherits MeanCalculator}
+
+HarmonicMean
+
+\subsection* {Uses}
+
+MeanCalculator
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+None 
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{5cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+meanCalc & seq of $\mathbb{R}$ & $\mathbb{R}$ & ~\\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+None
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions}
+
+None
+
+\subsubsection* {Access Routine Semantics}
+
+meanCalc($v$)
+\begin{itemize}
+\item output: $\mathit{out} := \frac{|x|}{+(x: \mathbb{R} | x \in v : 1/x)}$
+\item exception: none
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\section* {Quadratic Mean Calculation}
+
+\subsection*{Template Module inherits MeanCalculator}
+
+QuadraticMean
+
+\subsection* {Uses}
+
+MeanCalculator
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+None 
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{5cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+meanCalc & seq of $\mathbb{R}$ & $\mathbb{R}$ & ~\\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+None
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions}
+
+None
+
+\subsubsection* {Access Routine Semantics}
+
+meanCalc($v$)
+\begin{itemize}
+\item output: $\mathit{out} := \sqrt{\frac{+(x: \mathbb{R} | x \in v : x^2)}{|x|}}$
+\item exception: none
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\section* {Seq1D Module}
+
+\subsection* {Template Module}
+
+Seq1D
+
+\subsection* {Uses}
+
+MeanCalculator
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Types}
+
+Seq1D = ?
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{6cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+new Seq1D & seq of $\mathbb{R}$, MeanCalculator & Seq1D & IllegalArgumentException\\
+\hline
+setMaxCalculator & MaxCalculator &  & \\
+\hline
+mean &  & $\mathbb{R}$ & \\
+\hline
+
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+$s$: seq of $\mathbb{R}$\\
+meanCalculator: MeanCalculator
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions}
+
+\begin{itemize}
+\item The Seq1D constructor is called for each object instance before any other
+  access routine is called for that object.  The constructor can only be called
+  once.  All real numbers provided to the constructor will be zero or positive.
+\end{itemize}
+
+\subsubsection* {Access Routine Semantics}
+
+new Seq1D($x$, $m$):
+\begin{itemize}
+\item transition: $s, \text{meanCalculator} := x, m$
+\item output: $\mathit{out} := \mathit{self}$
+\item exception:
+  $\mathit{exc} := (|x| = 0 \Rightarrow \mbox{IllegalArgumentException})$
+\end{itemize}
+
+\noindent setMeanCalculator($m$):
+\begin{itemize}
+\item transition: $\mbox{meanCalculator} := m$
+\item exception: none
+\end{itemize}
+
+\noindent mean():
+\begin{itemize}
+\item output: $\mathit{out} := \mbox{meanCalculator.meanCalc}()$
+\item exception: none
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\subsection*{Code for MeanCalculator.java}
+
+\noindent \lstinputlisting[language = Java]{./src/MeanCalculator.java}
+
+\newpage
+
+\subsection*{Code for HarmonicMean.java}
+
+\noindent \lstinputlisting[language = Java]{./src/HarmonicMean.java}
+
+\newpage
+
+\subsection*{Code for QuadraticMean.java}
+
+\noindent \lstinputlisting[language = Java]{./src/QuadraticMean.java}
+
+\newpage
+
+\subsection*{Code for Seq1D.java}
+
+\noindent \lstinputlisting[language = Java]{./src/Seq1D.java}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
